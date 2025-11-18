@@ -3,33 +3,31 @@ using UnityEngine.UI;
 
 public class LivePreview : MonoBehaviour
 {
-    [Header("Images (assign in inspector)")]
-    public Image bodyImg;
-    public Image hairImg;
-    public Image eyesImg;
-    public Image clothesImg;
+    public Image body;
+    public Image hair;
+    public Image eyes;
+    public Image outfit;
 
-    [Header("Sprites (drag folders)")]
-    public Sprite[] skins;
-    public Sprite[] hairs;
-    public Sprite[] eyes;
-    public Sprite[] clothes;
+    public Sprite[] skinSprites;
+    public Sprite[] hairSprites;
+    public Sprite[] eyeSprites;
+    public Sprite[] outfitSprites; // index = faction enum
 
-    private CharacterData data => GameDataManager.Instance.currentCharacter;
+    private CharacterData Data => GameDataManager.Instance.currentCharacter;
 
-    void OnEnable() => Refresh();
-
-    public void Refresh()
+    private void OnEnable() => RefreshPreview();
+    public void RefreshPreview()
     {
-        if (data == null) return;
+        if (Data == null) return;
 
-        bodyImg.sprite = skins[data.skinIndex % skins.Length];
-        hairImg.sprite = hairs[data.hairIndex % hairs.Length];
-        eyesImg.sprite = eyes % eyes.Length;
-        clothesImg.sprite = clothes[(int)data.faction];
+        body.sprite = skinSprites[Data.skinIndex];
+        hair.sprite = hairSprites[Data.hairIndex];
+        eyes.sprite = eyeSprites[Data.eyeIndex];
+        outfit.sprite = outfitSprites[(int)Data.faction];
     }
 
-    public void SetSkin(int index) { data.skinIndex = index; Refresh(); }
-    public void SetHair(int index) { data.hairIndex = index; Refresh(); }
-    public void SetEyes(int index) { data.eyeIndex = index; Refresh(); }
+    // Called by dropdowns
+    public void UpdateSkin(int i) { Data.skinIndex = i; RefreshPreview(); }
+    public void UpdateHair(int i) { Data.hairIndex = i; RefreshPreview(); }
+    public void UpdateEyes(int i) { Data.eyeIndex = i; RefreshPreview(); }
 }
